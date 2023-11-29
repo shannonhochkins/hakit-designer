@@ -3,7 +3,7 @@ import { customElement, property } from "lit/decorators";
 
 import ReactDOM from "react-dom";
 import { createComponent } from "@lit/react";
-import { createElement } from "react";
+import { createElement, type ComponentType } from "react";
 
 import * as pjson from "../package.json";
 
@@ -27,7 +27,7 @@ console.info(
 class HakitDesigner extends LitElement {
   @property() private _path?: string;
 
-  @property() private ReactApp: React.ComponentType | null = null;
+  @property() private ReactApp: ComponentType | null = null;
 
   public async connectedCallback(): Promise<void> {
     super.connectedCallback();
