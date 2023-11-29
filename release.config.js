@@ -38,7 +38,5 @@ module.exports = {
     ],
   ],
   preset: "conventionalcommits",
-  branches: [
-    { name: "master" },
-  ],
+  branches: [{ name: "master" }],
 };

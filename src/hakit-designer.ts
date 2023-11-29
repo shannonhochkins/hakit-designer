@@ -1,9 +1,7 @@
 import { LitElement, html } from "lit";
 import { customElement, property } from "lit/decorators";
-
-import ReactDOM from "react-dom";
+import { createRoot } from "react-dom/client";
 import { createComponent } from "@lit/react";
-import { createElement, type ComponentType } from "react";
 
 import * as pjson from "../package.json";
 
@@ -27,20 +25,15 @@ console.info(
 class HakitDesigner extends LitElement {
   @property() private _path?: string;
 
-  @property() private ReactApp: ComponentType | null = null;
+  @property() private ReactApp: any | null = null;
+
+  @property() private reactRoot: any | null = null;
 
   public async connectedCallback(): Promise<void> {
     super.connectedCallback();
     const module = await import(this._path ?? "unknown");
     this.ReactApp = createComponent(module.default);
     this.requestUpdate();
-  }
-
-  disconnectedCallback() {
-    ReactDOM.unmountComponentAtNode(
-      this.shadowRoot?.querySelector("#react-root")
-    );
-    super.disconnectedCallback();
   }
 
   render() {
@@ -51,11 +44,13 @@ class HakitDesigner extends LitElement {
   }
 
   firstUpdated() {
-    if (this.ReactApp) {
-      ReactDOM.render(
-        createElement(this.ReactApp),
-        this.shadowRoot?.querySelector("#react-root")
+    if (this.reactRoot === undefined) {
+      this.reactRoot = createRoot(
+        this.shadowRoot!.querySelector("#react-root")
       );
+    }
+    if (this.ReactApp) {
+      this.reactRoot.render(this.ReactApp);
     }
   }
 }
